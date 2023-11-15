@@ -10,48 +10,43 @@ const generarNumeroAleatorio = (minimo, maximo) => {
 const numeroParaAcertar = generarNumeroAleatorio(0, 100);
 console.log(numeroParaAcertar);
 
-// Función para acertar el número aleatorio asignado
-const haAcertadoElNumero = (numeroAAcertar, numeroDelUsuario) => {
-  if (numeroAAcertar === numeroDelUsuario) {
-    console.log('El usuario ha acertado');
+const muestraMensajeComprobacion = (texto, estado) => {
+  let mensaje = '';
+  if (estado === NO_ES_UN_NUMERO) {
+    mensaje = `"${texto}" no es un numero 🤨, prueba otra vez`;
   } else {
-    console.log('No es el número, prueba otra vez');
-  }
-};
-
-console.log(haAcertadoElNumero(50, 50));
-console.log(haAcertadoElNumero(50, 51));
-
-// Función que establece el número de intentos para acertar el número
-const haSuperadoElNumeroDeIntentos = (numeroDeIntentos, maximoDeIntentos) => {
-  if (numeroDeIntentos > maximoDeIntentos) {
-    console.log('Has superado el número de intentos');
-  } else {
-    console.log('Aún no has superado el número de intento');
-  }
-};
-
-console.log(haSuperadoElNumeroDeIntentos(5, 1));
-console.log(haSuperadoElNumeroDeIntentos(5, 6));
-
-// Botón que disparará el evento para comprobar si el número escrito es el correcto
-const botonComprobar = document.getElementById('comprobar');
-botonComprobar.addEventListener('click', () => {
-  const texto = document.getElementById('numero').value;
-  const numero = parseInt(texto);
-  const esUnNumero = !isNaN(numero);
-  const resultado = document.getElementById('resultado');
-
-  if (!esUnNumero) {
-    resultado.innerHTML = `"${texto}" no es un número
-🤨, prueba otra vez`;
-  } else {
-    if (numero === numeroParaAcertar) {
-      resultado.innerHTML = `¡¡¡Enhorabuena, has
-acertado el número!!! 🎉🎉🎉`;
+    if (estado === NO_ES_EL_NUMERO_SECRETO) {
+      mensaje = `Lo siento ${texto}, el número no es el correcto 😢, prueba de
+nuevo`;
     } else {
-      resultado.innerHTML = `Lo siento ${texto}, el
-número no es el correcto 😢, prueba de nuevo`;
+      if (estado === ES_EL_NUMERO_SECRETO) {
+        mensaje = `¡¡¡Enhorabuena, has acertado el número!!! 🎉🎉🎉`;
+      }
     }
   }
-});
+  document.getElementById('resultado').innerHTML = mensaje;
+};
+
+const comprobarNumero = (texto) => {
+  let numero = parseInt(texto);
+  let esUnNumero = !isNaN(numero);
+  let resultado = NO_ES_UN_NUMERO;
+  if (esUnNumero) {
+    // Si es un número, comprobamos si es el número secreto
+    if (numero === numeroParaAcertar) {
+      resultado = ES_EL_NUMERO_SECRETO;
+    } else {
+      resultado = NO_ES_EL_NUMERO_SECRETO;
+    }
+  }
+  return resultado;
+};
+
+const handleCompruebaClick = () => {
+  const texto = document.getElementById('numero').value;
+  const estado = comprobarNumero(texto);
+  muestraMensajeComprobacion(texto, estado);
+};
+
+const botonComprobar = document.getElementById('comprobar');
+botonComprobar.addEventListener('click', handleCompruebaClick);
