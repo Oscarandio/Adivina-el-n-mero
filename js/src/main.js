@@ -1,3 +1,7 @@
+const NO_ES_UN_NUMERO = 0;
+const NO_ES_EL_NUMERO_SECRETO = 1;
+const ES_EL_NUMERO_SECRETO = 2;
+
 // Generamos un número aleatorio
 const generarNumeroAleatorio = (minimo, maximo) => {
   return Math.floor(Math.random() * (minimo, maximo) + minimo);
